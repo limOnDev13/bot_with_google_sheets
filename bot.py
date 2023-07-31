@@ -6,6 +6,7 @@ from aiogram.types.message import ContentType
 from aiogram.filters import Command
 import asyncpg
 from asyncpg.pool import Pool
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from keyboards import set_main_menu
 from config_data import Config, load_config
@@ -43,8 +44,9 @@ async def main():
                                                    password=config.con_pool.user.password
                                                    )
 
-    dp.include_router(user_handlers.router)
-    dp.include_router(other_handlers.router)
+    # Работа с планировщиком выполнения заданий
+    scheduler: AsyncIOScheduler = AsyncIOScheduler()
+    scheduler.start()
 
     # Регистрируем мидлвари
     dp.update.middleware.register(DataBaseMiddleware(pool_connect))
@@ -55,6 +57,9 @@ async def main():
     dp.message.register(successful_payment,
                         F.content_type.in_({ContentType.SUCCESSFUL_PAYMENT}))
 
+    # Регистрируем роутеры
+    dp.include_router(user_handlers.router)
+    dp.include_router(other_handlers.router)
 
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
