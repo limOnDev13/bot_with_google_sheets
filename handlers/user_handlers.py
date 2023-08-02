@@ -5,9 +5,13 @@
 from aiogram import Router
 from aiogram.filters import Command, CommandStart, Text
 from aiogram.types import Message, CallbackQuery
+from datetime import date
+from typing import List
+
 import keyboards
 from lexicon.lexicon_ru import LEXICON_RU
 from services import services
+from filters.other_filters import ShowTransactions
 
 
 router: Router = Router()
@@ -29,4 +33,10 @@ async def process_name_command(message: Message):
 @router.message(Command(commands='branch'))
 async def process_name_command(message: Message):
     msg_text: str = services.branch_share()
+    await message.answer(text=msg_text)
+
+
+@router.message(ShowTransactions())
+async def process_transaction_command(message: Message, dates: set[date], ranges: List[List[date]]):
+    msg_text: str = services.name_ticker_profit(dates, ranges)
     await message.answer(text=msg_text)

@@ -68,43 +68,34 @@ def branch_share() -> str:
     return _create_text(result_table)
 
 
-def name_ticker_profit(input_dates: str) -> str:
+def name_ticker_profit(dates: set[date], ranges: List[List[date]]) -> str:
     # Обозначим переменные
     result_table: List[dict[str, Any]] = []
     worksheet: Worksheet = _get_worksheet(2)
     column_names: List[str] = ['Дата', 'Наименование', 'Тикер', 'Доход в процентах']
-
-    # Переведем введенные даты в тип datetime
-    list_str_dates: List[str] = input_dates.split(' ')
-    dates: set[date] = set()
-
-    for str_date in list_str_dates:
-        if ':' in str_date:
-            str_date_range: List[str] = str_date.split(':')
-            start_date: date = make_right_date_format(str_date_range[0])
-            end_date: date = make_right_date_format(str_date_range[1])
-            day: date = start_date
-
-            while day <= end_date:
-                dates.add(day)
-        else:
-            day: date = make_right_date_format(str_date)
-
-            dates.add(day)
 
     # Заполним таблицу необходимыми данными
     table: List[dict[str, Any]] = worksheet.get_all_records()
 
     for row in table:
         result_row: dict[str, Any] = dict()
-        day: date = datetime.strptime(row['Дата'], "%d.%m.%Y")
+        day: date = datetime.strptime(row['Дата'], "%d.%m.%Y").date()
 
-        if day in dates:
+        # Проверим, есть ли дата в таблице в выбранных диапазонах
+        day_in_ranges: bool = False
+        for span in ranges:
+            if span[0] <= day <= span[1]:
+                day_in_ranges = True
+                break
+
+        if (day in dates) or day_in_ranges:
             for key in column_names:
                 result_row[key] = row[key]
 
         result_table.append(result_row)
 
-    result_text: str = _create_text(result_table) + 'Всего доход %%: ' + str(worksheet.get('E2'))
+    final_table = sorted(result_table, key=lambda d: d['Дата'])
+
+    result_text: str = _create_text(final_table) + 'Всего доход %%: ' + str(worksheet.get('E2')[0][0])
 
     return result_text
