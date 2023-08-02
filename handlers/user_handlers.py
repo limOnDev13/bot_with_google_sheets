@@ -6,8 +6,15 @@ from aiogram import Router
 from aiogram.filters import Command, CommandStart, Text
 from aiogram.types import Message, CallbackQuery
 import keyboards
-import lexicon
+from lexicon.lexicon_ru import LEXICON_RU
 import services
 
 
 router: Router = Router()
+
+
+# Обработка команды /help
+@router.message(Command(commands='help'))
+async def process_help_command(message: Message):
+    # Отправим пользователю справку о боте
+    await message.answer(text=LEXICON_RU['help'])
