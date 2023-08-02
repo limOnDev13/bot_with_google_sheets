@@ -9,18 +9,12 @@ from datetime import datetime, date
 from utils.utils import make_right_date_format
 
 
-gc = gspread.service_account(
-    filename='mytestpythonproject-394706-4cc29a499b41.json'
-)
-sh = gc.open("Test_table")
-
-
 def _get_worksheet(sheet_num: int) -> Worksheet:
     gc = gspread.service_account(
-        filename='mytestpythonproject-394706-4cc29a499b41.json'
+        filename='E:/vovasProgram/bot_with_google_sheets/services/mytestpythonproject-394706-4cc29a499b41.json'
     )
     sh = gc.open("Test_table")
-    return sh.worksheet(sheet_num)
+    return sh.get_worksheet(sheet_num)
 
 
 def _create_text(input_table: List[dict]) -> str:
@@ -40,11 +34,12 @@ def _create_text(input_table: List[dict]) -> str:
 def name_ticker_share() -> str:
     result_table: List[dict[str, Any]] = []
     worksheet: Worksheet = _get_worksheet(0)
-    column_names: set[str] = {'Наименование', 'Тикер', 'Доля в портфеле'}
+    column_names: List[str] = ['Наименование', 'Тикер', 'Доля в портфеле']
 
     table: List[dict[str, Any]] = worksheet.get_all_records()
 
     for row in table:
+        print(row)
         result_row: dict[str, Any] = dict()
 
         for key in column_names:
@@ -58,7 +53,7 @@ def name_ticker_share() -> str:
 def branch_share() -> str:
     result_table: List[dict[str, Any]] = []
     worksheet: Worksheet = _get_worksheet(1)
-    column_names: set[str] = {'Отрасль', 'Доля'}
+    column_names: List[str] = ['Отрасль', 'Доля']
 
     table: List[dict[str, Any]] = worksheet.get_all_records()
 
@@ -76,8 +71,8 @@ def branch_share() -> str:
 def name_ticker_profit(input_dates: str) -> str:
     # Обозначим переменные
     result_table: List[dict[str, Any]] = []
-    worksheet: Worksheet = _get_worksheet(0)
-    column_names: set[str] = {'Дата', 'Наименование', 'Тикер', 'Доход в процентах'}
+    worksheet: Worksheet = _get_worksheet(2)
+    column_names: List[str] = ['Дата', 'Наименование', 'Тикер', 'Доход в процентах']
 
     # Переведем введенные даты в тип datetime
     list_str_dates: List[str] = input_dates.split(' ')
