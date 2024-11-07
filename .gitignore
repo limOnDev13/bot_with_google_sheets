@@ -13,3 +13,5 @@ utils/__pycache__/
 filters/__pycache__/
 /.venv/
 /database/db/
+/db/
+/pgdata/
