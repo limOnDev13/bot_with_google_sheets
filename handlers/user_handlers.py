@@ -3,8 +3,8 @@
 например, для тех, кто запустил бота в первый раз.
 """
 from aiogram import Router
-from aiogram.filters import Command, CommandStart, Text
-from aiogram.types import Message, CallbackQuery
+from aiogram.filters import Command
+from aiogram.types import Message
 from datetime import date
 from typing import List
 
