@@ -1,5 +1,6 @@
 .env
 .idea/vcs.xml
+/.idea/
 config_data/__pycache__/
 database/__pycache__/
 handlers/__pycache__/
@@ -10,3 +11,5 @@ services/__pycache__/
 services/mytestpythonproject-394706-4cc29a499b41.json
 utils/__pycache__/
 filters/__pycache__/
+/.venv/
+/database/db/
