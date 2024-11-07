@@ -43,7 +43,6 @@ async def main():
     # Настройка пула подключений к бд
     pool_connect: Pool = await asyncpg.create_pool(host=config.con_pool.db.host,
                                                    port=config.con_pool.db.port,
-                                                   database=config.con_pool.db.db_name,
                                                    user=config.con_pool.user.user,
                                                    password=config.con_pool.user.password
                                                    )
